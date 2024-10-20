@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>WebGL Demo</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+      integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+      crossorigin="anonymous"
+      defer></script>
+    <script src="./ColorCombinationDemo/webGL-demo.js" type="module"></script>
+  </head>
+
+  <body>
+    <canvas id="glcanvas" width="640" height="480" style="border: solid 5px"></canvas>
+    <br>
+    <label for="OBJ">OBJ file:</label>
+    <input type="file" id="OBJ" name="OBJ" accept=".obj"></input>
+    <br>
+    <label for="sliderRed">R:</label>
+    <input type="range" id="sliderRed" min="0" max="1" value="1" step="0.01"></input>
+    <br>
+    <label for="sliderGreen">G:</label>
+    <input type="range" id="sliderGreen" min="0" max="1" value="1" step="0.01"></input>
+    <br>
+    <label for="sliderBlue">B:</label>
+    <input type="range" id="sliderBlue" min="0" max="1" value="1" step="0.01"></input>
+    <br>
+    <label for="sliderAlpha">A:</label>
+    <input type="range" id="sliderAlpha" min="0" max="1" value="0.25" step="0.01"></input>
+  </body>
+</html>
