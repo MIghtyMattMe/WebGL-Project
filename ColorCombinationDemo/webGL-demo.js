@@ -1,26 +1,20 @@
 import { drawScene, overlayColor } from "./draw-scene.js";
 import { vsSource, fsSource } from "./shaders.js"
 import { setUpCam } from "./cameraSphere.js";
-import { ImportOBJ, vertexArray, vertexBuffer } from "../ImportExportScripts/ImportOBJ.js";
+import { ImportOBJ, indexBuffer, vertexBuffer, textureBuffer } from "../ImportExportScripts/ImportOBJ.js";
 
 let programData;
 let defaultIcon;
-let status = {
-  imported: false,
-  initialized: false
-}
 window.onload = initEverything().then(() => {drawScene(programData.gl, programData.programInfo, programData.buffers);});
 main();
 
 function main() {
   // Draw the scene
-  console.log(status.initialized);
-  if (!status.initialized) {return}
   //drawScene(programData.gl, programData.programInfo, programData.buffers);
 }
 
 async function initEverything() {
-  await ImportOBJ("../Objects/Cube.obj", status);
+  await ImportOBJ("../Objects/Test.obj");
   //create gl context
   const canvas = document.getElementById("glcanvas");
   const gl = canvas.getContext("webgl");
@@ -60,37 +54,35 @@ async function initEverything() {
   //buffers for positions, colors, etc
   const positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  const positions = vertexArray;
+  const positions = vertexBuffer;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  console.log(positions);
 
   const colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   const faceColors = [
     [1.0, 1.0, 1.0, 1.0],
-    [1.0, 0.0, 1.0, 1.0],
-    [0.0, 1.0, 1.0, 1.0],
-    [0.0, 0.0, 1.0, 1.0],
-    [1.0, 1.0, 0.0, 1.0],
     [1.0, 0.0, 0.0, 1.0],
     [0.0, 1.0, 0.0, 1.0],
+    [0.0, 0.0, 1.0, 1.0],
     [0.0, 0.0, 0.0, 1.0],
+    [1.0, 0.0, 1.0, 1.0],
   ];
-  
   // Convert the array of colors into a table for all the vertices.
-  
   var colors = [];
-  
   for (var j = 0; j < faceColors.length; ++j) {
     const c = faceColors[j];
     // Repeat each color four times for the four vertices of the face
-    colors = colors.concat(c);
+    colors = colors.concat(c, c, c, c, c, c);
   }
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+  console.log(colors);
 
-  const indexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  const indices = vertexBuffer;
+  const objIndexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, objIndexBuffer);
+  const indices = indexBuffer;
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW,);
+  console.log(indices);
 
   //create textures and upload texture data
   defaultIcon = gl.createTexture();
@@ -102,22 +94,33 @@ async function initEverything() {
 
   const texCoordBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-  var textureCoords = [
-    0.0, 1.0,
-    0.0, 0.0,
-    1.0, 1.0,
-    1.0, 0.0,
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,
-  ];
+  var textureCoords = textureBuffer; /*[
+    // Front
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+    // Back
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+    // Top
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+    // Bottom
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+    // Right
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+    // Left
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
+    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+  ];*/
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW)
+  console.log(textureCoords);
   
   const buffers = {
     position: positionBuffer,
     color: colorBuffer,
-    indices: indexBuffer,
+    indices: objIndexBuffer,
     textureCoords: texCoordBuffer
   };
 
