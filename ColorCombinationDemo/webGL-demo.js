@@ -40,7 +40,6 @@ async function initEverything() {
     program: shaderProgram,
     attribLocations: { 
       vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
-      vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
       vertexTextureCoord: gl.getAttribLocation(shaderProgram, "aTexCoord")
     },
     uniformLocations: {
@@ -58,26 +57,6 @@ async function initEverything() {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
   console.log(positions);
 
-  const colorBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  const faceColors = [
-    [1.0, 1.0, 1.0, 1.0],
-    [1.0, 0.0, 0.0, 1.0],
-    [0.0, 1.0, 0.0, 1.0],
-    [0.0, 0.0, 1.0, 1.0],
-    [0.0, 0.0, 0.0, 1.0],
-    [1.0, 0.0, 1.0, 1.0],
-  ];
-  // Convert the array of colors into a table for all the vertices.
-  var colors = [];
-  for (var j = 0; j < faceColors.length; ++j) {
-    const c = faceColors[j];
-    // Repeat each color four times for the four vertices of the face
-    colors = colors.concat(c, c, c, c, c, c);
-  }
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-  console.log(colors);
-
   const objIndexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, objIndexBuffer);
   const indices = indexBuffer;
@@ -94,32 +73,12 @@ async function initEverything() {
 
   const texCoordBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-  var textureCoords = textureBuffer; /*[
-    // Front
-    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-    // Back
-    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-    // Top
-    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-    // Bottom
-    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-    // Right
-    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-    // Left
-    0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
-    0.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-  ];*/
+  var textureCoords = textureBuffer;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW)
   console.log(textureCoords);
   
   const buffers = {
     position: positionBuffer,
-    color: colorBuffer,
     indices: objIndexBuffer,
     textureCoords: texCoordBuffer
   };

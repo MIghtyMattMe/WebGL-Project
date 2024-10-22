@@ -2,6 +2,7 @@ import { camView, viewPos } from "./cameraSphere.js";
 import { defaultIcon } from "./webGL-demo.js";
 
 let overlayColor = [1.0, 1.0, 1.0, 1.0];
+let vertCount = 0;
 
 function drawScene(gl, programInfo, buffers) {
   requestAnimationFrame(function() {drawScene(gl, programInfo, buffers);});
@@ -42,7 +43,6 @@ function drawScene(gl, programInfo, buffers) {
 
   // Tell webgl how to read the vertex postions from the buffer
   setPositionAttribute(gl, buffers, programInfo);
-  setColorAttribute(gl, buffers, programInfo);
   setTexAttribute(gl, buffers, programInfo);
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
@@ -59,7 +59,7 @@ function drawScene(gl, programInfo, buffers) {
   gl.uniform1i(programInfo.uniformLocations.textureSample, 0)
 
   //draw the object
-  const vertexCount = 36;
+  const vertexCount = vertCount;
   const type = gl.UNSIGNED_SHORT;
   const offset = 0;
   gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
@@ -73,26 +73,9 @@ function setPositionAttribute(gl, buffers, programInfo) {
   const stride = 0; // how many bytes to get from one set of values to the next
   const offset = 0; // how many bytes inside the buffer to start from
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+  vertCount = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_SIZE) / 16;
   gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, numComponents, type, normalize, stride, offset);
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-}
-
-function setColorAttribute(gl, buffers, programInfo) {
-  const numComponents = 4;
-  const type = gl.FLOAT;
-  const normalize = false;
-  const stride = 0;
-  const offset = 0;
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
-  gl.vertexAttribPointer(
-    programInfo.attribLocations.vertexColor,
-    numComponents,
-    type,
-    normalize,
-    stride,
-    offset,
-  );
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
 }
 
 function setTexAttribute(gl, buffers, programInfo) {

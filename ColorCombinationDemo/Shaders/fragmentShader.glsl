@@ -1,8 +1,12 @@
 precision mediump float;
+
 uniform vec4 uOverlayColor;
-varying lowp vec4 vColor;
+uniform sampler2D uSampler;
+
+varying vec2 vTexCoord;
 
 void main(void) {
-    gl_FragColor.xyz = uOverlayColor.w * uOverlayColor.xyz + (1.0 - uOverlayColor.w) * vColor.xyz;
-    gl_FragColor.w = 1.0;
+    vec4 baseColor = texture2D(uSampler, vec2(vTexCoord.s, vTexCoord.t));
+    float newAlpha = uOverlayColor.w + (1.0 - uOverlayColor.w) * baseColor.w;
+    gl_FragColor = (uOverlayColor.w * uOverlayColor + (1.0 - uOverlayColor.w) * baseColor.w * baseColor) / newAlpha;
 }
